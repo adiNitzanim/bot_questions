@@ -4,7 +4,7 @@ from Question import Question
 def build_question(line_array, question_array):
 
 
-
+# this version is before add the option to change answers
 def analyze_data():
     file = open("data.txt", "r")
     questions_array = {}
@@ -23,4 +23,5 @@ def analyze_data():
                 question_answers[answer_text] = questions_array[answer_next_question]
             # next question object doesn't exist
             else:
+
 
