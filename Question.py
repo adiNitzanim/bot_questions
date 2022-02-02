@@ -89,5 +89,9 @@ class Question:
 
     def guess(self, num_of_answer):
         self.guess_number = num_of_answer
+        if self.correct_answer == num_of_answer:
+            return True
+        else:
+            return False
 
 

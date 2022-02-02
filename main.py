@@ -25,6 +25,7 @@ def main():
     questions_array = analyze_data()
     current_question_number = 0
     question = questions_array[current_question_number]
+    player_points = 0
     running = True
     done_guess = False
     while running:
@@ -34,7 +35,7 @@ def main():
             if event.type == pygame.QUIT:
                 running = False
             if done_guess:
-                if current_question_number +1 < len(questions_array):
+                if current_question_number + 1 < len(questions_array):
                     current_question_number += 1
                     question = questions_array[current_question_number]
                     done_guess = False
@@ -47,16 +48,16 @@ def main():
                 answers_buttons = question.answers_buttons()
                 for i in range(0, NUM_OF_QUESTIONS):
                     if mouse_in_button(answers_buttons[i], mouse_pos):
-                        question.guess(i)
+                        guess = question.guess(i)
+                        if guess:
+                            player_points += 1
                         done_guess = True
-
-
-
 
         # Update display - without input update everything
         screen.blit(background, (0, 0))
         question.display_question()
         question.display_answers()
+        print(player_points)
 
         # display_ask_question(screen, zulu_answer, 90, (255, 0, 0))
         pygame.display.update()
@@ -66,5 +67,6 @@ def main():
         clock.tick(60)
     pygame.quit()
     quit()
+
 
 main()
