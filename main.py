@@ -64,8 +64,7 @@ def main():
 
         screen.blit(background, (0, 0))
         if not finish_questions:
-            question.display_question()
-            question.display_answers()
+            question.display()
         else:
             display_results(player_points)
         pygame.display.update()
