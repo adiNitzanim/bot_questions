@@ -96,3 +96,6 @@ class Question:
             return True
         else:
             return False
+
+    def restart(self):
+        self.guess_number = -1

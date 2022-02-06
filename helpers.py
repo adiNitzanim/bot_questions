@@ -2,7 +2,10 @@ from math import ceil
 
 import pygame
 
-from constants import WINDOW_WIDTH, WINDOW_HEIGHT, TEXT_FONT_SIZE
+from constants import WINDOW_WIDTH, WINDOW_HEIGHT, TEXT_FONT_SIZE, RESULTS_X, \
+    RESULTS_Y, RESULTS_TEXT_COLOR, START_OVER_BUTTON_COLOR, START_OVER_X, \
+    START_OVER_Y, START_OVER_WIDTH, START_OVER_HEIGHT, START_OVER_TEXT_SIZE, \
+    START_OVER_TEXT_COLOR, CHAT_WINDOW_WIDTH, CHAT_WINDOW_X
 
 screen = pygame.display.set_mode((WINDOW_WIDTH, WINDOW_HEIGHT))
 
@@ -18,7 +21,8 @@ def from_text_to_array(text, text_box_width, text_font_size):
     if text_rect.width > text_box_width:
         num_of_rows = ceil(text_rect.width / text_box_width)
         line_max_length = int(len(text) / num_of_rows)
-        print(text, text_rect.width, text_box_width, num_of_rows, len(text), line_max_length, len(text) / num_of_rows)
+        print(text, text_rect.width, text_box_width, num_of_rows, len(text),
+              line_max_length, len(text) / num_of_rows)
         while not (len(text_to_edit) <= 0):
             if len(text_to_edit) < line_max_length:
                 text_to_edit = remove_space_from_start(text_to_edit)
@@ -57,8 +61,34 @@ def center_text(rect, text_rect, row_number, num_of_rows):
     return text_rect
 
 
-
 def mouse_in_button(button, mouse_pos):
     if button.x_pos + button.width > mouse_pos[0] > button.x_pos and \
             button.y_pos < mouse_pos[1] < button.y_pos + button.height:
         return True
+
+
+def display_results(player_points):
+    start_over_back_rect = pygame.draw.rect(screen, START_OVER_BUTTON_COLOR,
+                     pygame.Rect(START_OVER_X,
+                                 START_OVER_Y,
+                                 START_OVER_WIDTH,
+                                 START_OVER_HEIGHT))
+    results_text = pygame.font.SysFont('chalkduster.ttf',
+                                    TEXT_FONT_SIZE, bold=False)
+    results_display = results_text.render(
+        "You have " + str(player_points) + " correct answers!",
+        True, RESULTS_TEXT_COLOR)
+    results_text_rect = results_display.get_rect()
+    width_margin = (CHAT_WINDOW_WIDTH - results_text_rect.width) // 2
+    results_text_rect.x = CHAT_WINDOW_X + width_margin
+    screen.blit(results_display, (
+        results_text_rect.x, RESULTS_Y))
+
+    start_over_font = pygame.font.SysFont('chalkduster.ttf',
+                                    START_OVER_TEXT_SIZE, bold=False)
+    start_over_display = start_over_font.render(
+        "START OVER",
+        True, START_OVER_TEXT_COLOR)
+    start_over_text_rect = start_over_display.get_rect()
+    start_over_text_rect = center_text(start_over_back_rect, start_over_text_rect, 0, 1)
+    screen.blit(start_over_display, (start_over_text_rect.x, start_over_text_rect.y))
