@@ -2,23 +2,23 @@ from math import ceil
 
 import pygame
 
-from constants import TEXT_BOX_WIDTH, TEXT_FONT_SIZE, WINDOW_WIDTH, \
-    WINDOW_HEIGHT
+from constants import WINDOW_WIDTH, WINDOW_HEIGHT, TEXT_FONT_SIZE
 
 screen = pygame.display.set_mode((WINDOW_WIDTH, WINDOW_HEIGHT))
 
 
-def from_text_to_array(text):
+def from_text_to_array(text, text_box_width, text_font_size):
     text_array = []
     text_to_edit = text
     text_font = pygame.font.SysFont('chalkduster.ttf',
-                                    TEXT_FONT_SIZE, bold=False)
+                                    text_font_size, bold=False)
     text_to_display = text_font.render(text,
                                        True, (0, 0, 0))
     text_rect = text_to_display.get_rect()
-    if text_rect.width > TEXT_BOX_WIDTH:
-        num_of_rows = ceil(text_rect.width / TEXT_BOX_WIDTH)
+    if text_rect.width > text_box_width:
+        num_of_rows = ceil(text_rect.width / text_box_width)
         line_max_length = int(len(text) / num_of_rows)
+        print(text, text_rect.width, text_box_width, num_of_rows, len(text), line_max_length, len(text) / num_of_rows)
         while not (len(text_to_edit) <= 0):
             if len(text_to_edit) < line_max_length:
                 text_to_edit = remove_space_from_start(text_to_edit)
@@ -35,6 +35,7 @@ def from_text_to_array(text):
                 text_array.append(temp)
     else:
         text_array.append(text)
+    print(text_array)
     return text_array
 
 
@@ -45,12 +46,16 @@ def remove_space_from_start(text):
     return new_text
 
 
-def center_text(rect, text_rect):
+def center_text(rect, text_rect, row_number, num_of_rows):
+    horizontal_margin = \
+        (rect.height - num_of_rows * text_rect.height) // 2
     width_margin = (rect.width - text_rect.width) // 2
-    height_margin = (rect.height - text_rect.height) // 2
     text_rect.x = rect.x + width_margin
-    text_rect.y = rect.y + height_margin
+    # Center the text to the center of the post on Y axis
+    text_rect.y = (rect.y + horizontal_margin +
+                   row_number * text_rect.height)
     return text_rect
+
 
 
 def mouse_in_button(button, mouse_pos):

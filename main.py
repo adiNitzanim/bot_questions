@@ -53,11 +53,12 @@ def main():
                             player_points += 1
                         done_guess = True
 
+
         # Update display - without input update everything
         screen.blit(background, (0, 0))
         question.display_question()
         question.display_answers()
-        print(player_points)
+
 
         # display_ask_question(screen, zulu_answer, 90, (255, 0, 0))
         pygame.display.update()

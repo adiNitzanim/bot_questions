@@ -10,8 +10,10 @@ from helpers import from_text_to_array, screen, center_text
 class Question:
 
     def __init__(self, num_of_question, question_text, answers, correct_answer):
-        self.text_array = from_text_to_array(question_text)
+        self.text_array = from_text_to_array(question_text, TEXT_BOX_WIDTH, TEXT_FONT_SIZE)
         self.answers = answers
+        for i in range(0, len(self.answers)):
+            answers[i] = from_text_to_array(answers[i], ANSWER_BOX_WIDTH, TEXT_FONT_SIZE)
         self.num_of_question = num_of_question
         self.correct_answer = correct_answer
 
@@ -25,7 +27,6 @@ class Question:
         self.question_height = text_rect.height * len(self.text_array)
         self.chat_y = CHAT_WINDOW_Y
         self.guess_number = -1
-
 
     # display the question text and possible answers
     def display_question(self):
@@ -46,7 +47,7 @@ class Question:
             text_to_display = text_font.render(self.text_array[i],
                                                True, (0, 0, 0))
             screen.blit(text_to_display, (
-            CHAT_WINDOW_X + 5, CHAT_WINDOW_Y + 5 + (text_height * i)))
+                CHAT_WINDOW_X + 5, CHAT_WINDOW_Y + 5 + (text_height * i)))
 
     def display_answers(self):
         first_answer_y = self.chat_y + self.question_height + GAP_Y
@@ -57,34 +58,36 @@ class Question:
                     color = (0, 255, 0)
                 else:
                     color = (255, 0, 0)
-
-            text_font = pygame.font.SysFont('chalkduster.ttf',
-                                            TEXT_FONT_SIZE, bold=False)
-            text_to_display = text_font.render(self.answers[i],
-                                               True, (0, 0, 0))
-            text_rect = text_to_display.get_rect()
             rect = pygame.draw.rect(screen, color,
                                     pygame.Rect(ANSWER_BOX_X + ((i % 2) * (
-                                                ANSWER_BOX_WIDTH + GAP_X)),
+                                            ANSWER_BOX_WIDTH + GAP_X)),
                                                 first_answer_y + ((i // 2) * (
-                                                            ANSWER_BOX_HEIGHT + (
-                                                                GAP_Y // 2))),
+                                                        ANSWER_BOX_HEIGHT + (
+                                                        GAP_Y // 2))),
                                                 ANSWER_BOX_WIDTH,
                                                 ANSWER_BOX_HEIGHT))
-            text_rect = center_text(rect, text_rect)
-            screen.blit(text_to_display, (text_rect.x, text_rect.y))
+            for j in range(0, len(self.answers[i])):
+                text_font = pygame.font.SysFont('chalkduster.ttf',
+                                                TEXT_FONT_SIZE, bold=False)
+                text_to_display = text_font.render(self.answers[i][j],
+                                                   True, (0, 0, 0))
+                text_rect = text_to_display.get_rect()
+
+                text_rect = center_text(rect, text_rect, j, len(self.answers[i]))
+                screen.blit(text_to_display, (text_rect.x, text_rect.y))
 
     def answers_buttons(self):
         answers_buttons = []
         for i in range(0, len(self.answers)):
             answers_buttons.append(
                 Button(ANSWER_BOX_X + ((i % 2) * (
-                                                ANSWER_BOX_WIDTH + GAP_X)),
-                                                self.chat_y + self.question_height + GAP_Y + ((i // 2) * (
-                                                            ANSWER_BOX_HEIGHT + (
-                                                                GAP_Y // 2))),
-                                                ANSWER_BOX_WIDTH,
-                                                ANSWER_BOX_HEIGHT))
+                        ANSWER_BOX_WIDTH + GAP_X)),
+                       self.chat_y + self.question_height + GAP_Y + (
+                                   (i // 2) * (
+                                   ANSWER_BOX_HEIGHT + (
+                                   GAP_Y // 2))),
+                       ANSWER_BOX_WIDTH,
+                       ANSWER_BOX_HEIGHT))
         return answers_buttons
 
     def guess(self, num_of_answer):
@@ -93,5 +96,3 @@ class Question:
             return True
         else:
             return False
-
-
