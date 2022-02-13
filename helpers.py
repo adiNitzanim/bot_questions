@@ -2,10 +2,11 @@ from math import ceil
 
 import pygame
 
-from constants import WINDOW_WIDTH, WINDOW_HEIGHT, TEXT_FONT_SIZE, RESULTS_X, \
+from constants import WINDOW_WIDTH, WINDOW_HEIGHT, QUESTION_FONT_SIZE, \
+    RESULTS_X, \
     RESULTS_Y, RESULTS_TEXT_COLOR, START_OVER_BUTTON_COLOR, START_OVER_X, \
     START_OVER_Y, START_OVER_WIDTH, START_OVER_HEIGHT, START_OVER_TEXT_SIZE, \
-    START_OVER_TEXT_COLOR, CHAT_WINDOW_WIDTH, CHAT_WINDOW_X
+    START_OVER_TEXT_COLOR, QUESTION_WIDTH, QUESTION_X, CHAT_BOX_WIDTH
 
 screen = pygame.display.set_mode((WINDOW_WIDTH, WINDOW_HEIGHT))
 
@@ -22,17 +23,19 @@ def from_text_to_array(text, text_box_width, text_font_size):
         num_of_rows = ceil(text_rect.width / text_box_width)
         line_max_length = int(len(text) / num_of_rows)
         while not (len(text_to_edit) <= 0):
-            if len(text_to_edit) < line_max_length:
+            if len(text_to_edit) <= line_max_length:
                 text_to_edit = remove_space_from_start(text_to_edit)
                 text_array.append(text_to_edit)
                 text_to_edit = ""
             else:
                 temp = text_to_edit[0: line_max_length]
                 text_to_edit = text_to_edit[line_max_length:]
-                while not (temp[-1] == ' ') and not (temp[-1] == ','):
-                    text_to_edit = temp[-1] + text_to_edit
-                    temp_len = int(len(temp))
-                    temp = temp[0: temp_len - 1]
+                if not (temp[-1] == " " or temp[-1] == ","):
+                    if not (text_to_edit[0] == ' ' or text_to_edit[0] == ','):
+                        while not (temp[-1] == ' ') and not (temp[-1] == ','):
+                            text_to_edit = temp[-1] + text_to_edit
+                            temp_len = int(len(temp))
+                            temp = temp[0: temp_len - 1]
                 temp = remove_space_from_start(temp)
                 text_array.append(temp)
     else:
@@ -44,6 +47,8 @@ def remove_space_from_start(text):
     new_text = text
     if text[0] == " ":
         new_text = text[1:]
+    if text[-1] == " ":
+        new_text = text[:-1]
     return new_text
 
 
@@ -71,13 +76,13 @@ def display_results(player_points):
                                                         START_OVER_WIDTH,
                                                         START_OVER_HEIGHT))
     results_text = pygame.font.SysFont('chalkduster.ttf',
-                                       TEXT_FONT_SIZE, bold=False)
+                                       QUESTION_FONT_SIZE, bold=False)
     results_display = results_text.render(
         "You have " + str(player_points) + " correct answers!",
         True, RESULTS_TEXT_COLOR)
     results_text_rect = results_display.get_rect()
-    width_margin = (CHAT_WINDOW_WIDTH - results_text_rect.width) // 2
-    results_text_rect.x = CHAT_WINDOW_X + width_margin
+    width_margin = (CHAT_BOX_WIDTH - results_text_rect.width) // 2
+    results_text_rect.x = QUESTION_X + width_margin
     screen.blit(results_display, (
         results_text_rect.x, RESULTS_Y))
 
@@ -95,8 +100,19 @@ def display_results(player_points):
 
 def calculate_sentence_height():
     text_font = pygame.font.SysFont('chalkduster.ttf',
-                                    TEXT_FONT_SIZE, bold=False)
+                                    QUESTION_FONT_SIZE, bold=False)
     text_to_display = text_font.render("hello",
                                        True, (0, 0, 0))
     text_rect = text_to_display.get_rect()
     return text_rect.height
+
+
+def roll_up(num_of_pixels, displayed_questions):
+    roll_up_pixels = 5
+    while roll_up_pixels < num_of_pixels:
+        for display_question in displayed_questions:
+            display_question.set_y_pos(
+                display_question.question_y - roll_up_pixels)
+        for display_question in displayed_questions:
+            display_question.display()
+        roll_up_pixels +=5
