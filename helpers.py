@@ -108,11 +108,19 @@ def calculate_sentence_height():
 
 
 def roll_up(num_of_pixels, displayed_questions):
-    roll_up_pixels = 5
-    while roll_up_pixels < num_of_pixels:
-        for display_question in displayed_questions:
-            display_question.set_y_pos(
-                display_question.question_y - roll_up_pixels)
-        for display_question in displayed_questions:
-            display_question.display()
-        roll_up_pixels +=5
+
+    for display_question in displayed_questions:
+        display_question.set_y_pos(
+            display_question.question_y_pos - num_of_pixels)
+        display_question.display()
+
+    print("finish roll up")
+
+
+def get_text_rect(font_size, text, text_color):
+    text_font = pygame.font.SysFont('chalkduster.ttf',
+                                    font_size, bold=False)
+    text_to_display = text_font.render(
+        text,
+        True, text_color)
+    return text_to_display.get_rect()

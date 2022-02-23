@@ -2,8 +2,7 @@ import pygame
 
 from Button import Button
 from Question import Question
-from constants import WINDOW_WIDTH, WINDOW_HEIGHT, QUESTION_WIDTH, \
-    QUESTION_HEIGHT, QUESTION_X, QUESTION_Y, \
+from constants import WINDOW_WIDTH, WINDOW_HEIGHT,\
     START_OVER_X, START_OVER_Y, START_OVER_WIDTH, START_OVER_HEIGHT, \
     NUM_OF_ANSWERS, END_OF_CHAT_Y
 from database_functions import analyze_data
@@ -44,15 +43,14 @@ def main():
                     current_question_number += 1
                     prev_question = question
                     question = questions_array[current_question_number]
-                    if prev_question.user_answer_y_end + question.question_answer_height > END_OF_CHAT_Y:
-                        for display_question in displayed_questions:
-                            display_question.set_y_pos(display_question.question_y - question.question_answer_height)
-                        # roll_up(question.question_answer_height, displayed_questions)
-                    question.set_y_pos(prev_question.user_answer_y_end)
+                    if prev_question.end_total_question_y_pos() + question.total_height_question_answers() > END_OF_CHAT_Y:
+                        pixel_to_roll_up = -1 *(END_OF_CHAT_Y - (
+                                prev_question.end_total_question_y_pos() + question.total_height_question_answers()))
+                        roll_up(pixel_to_roll_up, displayed_questions)
+                    question.set_y_pos(prev_question.end_total_question_y_pos())
                     displayed_questions.append(question)
                     done_guess = False
                 else:
-                    # show result
                     finish_questions = True
             if event.type == pygame.MOUSEBUTTONDOWN:
                 # Get the position (x,y) of the mouse press
@@ -73,10 +71,10 @@ def main():
                     for quest in questions_array:
                         quest.restart()
                     question = questions_array[current_question_number]
+                    displayed_questions = [question]
 
         screen.blit(background, (0, 0))
         if not finish_questions:
-            # question.display()
             for display_question in displayed_questions:
                 display_question.display()
         else:
