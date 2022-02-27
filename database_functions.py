@@ -1,5 +1,6 @@
 from Question import Question
 
+
 def analyze_data():
     file = open("data", "r")
     questions_array = []
@@ -9,6 +10,7 @@ def analyze_data():
         question_text = text_array[1]
         answers = [text_array[2], text_array[3], text_array[4], text_array[5]]
         correct_answer = int(text_array[6])
-        questions_array.append(Question(question_number, question_text, answers, correct_answer))
+        questions_array.append(
+            Question(question_number, question_text, answers, correct_answer))
     file.close()
     return questions_array

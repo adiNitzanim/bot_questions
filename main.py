@@ -24,10 +24,10 @@ def main():
         background_without_chat, (WINDOW_WIDTH, WINDOW_HEIGHT))
     questions_array = analyze_data()
     current_question_number = 0
-    question = questions_array[current_question_number]
+    current_question = questions_array[current_question_number]
     start_over_button = Button(START_OVER_X, START_OVER_Y, START_OVER_WIDTH,
                                START_OVER_HEIGHT)
-    displayed_questions = [question]
+    displayed_questions = [current_question]
     player_points = 0
     running = True
     finish_questions = False
@@ -41,24 +41,24 @@ def main():
             if done_guess:
                 if current_question_number + 1 < len(questions_array):
                     current_question_number += 1
-                    prev_question = question
-                    question = questions_array[current_question_number]
-                    if prev_question.end_total_question_y_pos() + question.total_height_question_answers() > END_OF_CHAT_Y:
+                    prev_question = current_question
+                    current_question = questions_array[current_question_number]
+                    if prev_question.end_total_question_y_pos() + current_question.total_height_question_answers() > END_OF_CHAT_Y:
                         pixel_to_roll_up = -1 *(END_OF_CHAT_Y - (
-                                prev_question.end_total_question_y_pos() + question.total_height_question_answers()))
+                                prev_question.end_total_question_y_pos() + current_question.total_height_question_answers()))
                         roll_up(pixel_to_roll_up, displayed_questions)
-                    question.set_y_pos(prev_question.end_total_question_y_pos())
-                    displayed_questions.append(question)
+                    current_question.set_y_pos(prev_question.end_total_question_y_pos())
+                    displayed_questions.append(current_question)
                     done_guess = False
                 else:
                     finish_questions = True
             if event.type == pygame.MOUSEBUTTONDOWN:
                 # Get the position (x,y) of the mouse press
                 mouse_pos = event.pos
-                answers_buttons = question.answers_buttons()
+                answers_buttons = current_question.answers_buttons()
                 for i in range(0, NUM_OF_ANSWERS):
                     if mouse_in_button(answers_buttons[i], mouse_pos):
-                        guess = question.guess(i)
+                        guess = current_question.guess(i)
                         if guess:
                             player_points += 1
                         done_guess = True
@@ -70,8 +70,8 @@ def main():
                     done_guess = False
                     for quest in questions_array:
                         quest.restart()
-                    question = questions_array[current_question_number]
-                    displayed_questions = [question]
+                    current_question = questions_array[current_question_number]
+                    displayed_questions = [current_question]
 
         screen.blit(background, (0, 0))
         if not finish_questions:

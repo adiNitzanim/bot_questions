@@ -6,7 +6,8 @@ from constants import WINDOW_WIDTH, WINDOW_HEIGHT, QUESTION_FONT_SIZE, \
     RESULTS_X, \
     RESULTS_Y, RESULTS_TEXT_COLOR, START_OVER_BUTTON_COLOR, START_OVER_X, \
     START_OVER_Y, START_OVER_WIDTH, START_OVER_HEIGHT, START_OVER_TEXT_SIZE, \
-    START_OVER_TEXT_COLOR, QUESTION_WIDTH, QUESTION_X, CHAT_BOX_WIDTH
+    START_OVER_TEXT_COLOR, QUESTION_WIDTH, QUESTION_X, CHAT_BOX_WIDTH, \
+    QUESTION_HEIGHT
 
 screen = pygame.display.set_mode((WINDOW_WIDTH, WINDOW_HEIGHT))
 
@@ -124,3 +125,19 @@ def get_text_rect(font_size, text, text_color):
         text,
         True, text_color)
     return text_to_display.get_rect()
+
+def load_result_pic():
+    begginer = pygame.image.load('images/begginer 1.jpg')
+    begginer = pygame.transform.scale(begginer,
+                                        (QUESTION_WIDTH, QUESTION_HEIGHT))
+
+    proficient = pygame.image.load('images/proficient.jpg')
+    proficient = pygame.transform.scale(begginer,
+                                      (QUESTION_WIDTH, QUESTION_HEIGHT))
+    expert = pygame.image.load('images/expert.jpg')
+    expert = pygame.transform.scale(begginer,
+                                      (QUESTION_WIDTH, QUESTION_HEIGHT))
+    master = pygame.image.load('images/master.jpg')
+    master = pygame.transform.scale(begginer,
+                                      (QUESTION_WIDTH, QUESTION_HEIGHT))
+
