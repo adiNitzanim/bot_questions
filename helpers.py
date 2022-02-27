@@ -109,7 +109,6 @@ def calculate_sentence_height():
 
 
 def roll_up(num_of_pixels, displayed_questions):
-
     for display_question in displayed_questions:
         display_question.set_y_pos(
             display_question.question_y_pos - num_of_pixels)
@@ -126,18 +125,17 @@ def get_text_rect(font_size, text, text_color):
         True, text_color)
     return text_to_display.get_rect()
 
-def load_result_pic():
-    begginer = pygame.image.load('images/begginer 1.jpg')
-    begginer = pygame.transform.scale(begginer,
-                                        (QUESTION_WIDTH, QUESTION_HEIGHT))
-
-    proficient = pygame.image.load('images/proficient.jpg')
-    proficient = pygame.transform.scale(begginer,
-                                      (QUESTION_WIDTH, QUESTION_HEIGHT))
-    expert = pygame.image.load('images/expert.jpg')
-    expert = pygame.transform.scale(begginer,
-                                      (QUESTION_WIDTH, QUESTION_HEIGHT))
-    master = pygame.image.load('images/master.jpg')
-    master = pygame.transform.scale(begginer,
-                                      (QUESTION_WIDTH, QUESTION_HEIGHT))
-
+# def load_result_pic():
+#     begginer = pygame.image.load('images/begginer 1.jpg')
+#     begginer = pygame.transform.scale(begginer,
+#                                       (QUESTION_WIDTH, QUESTION_HEIGHT))
+#
+#     proficient = pygame.image.load('images/proficient.jpg')
+#     proficient = pygame.transform.scale(begginer,
+#                                         (QUESTION_WIDTH, QUESTION_HEIGHT))
+#     expert = pygame.image.load('images/expert.jpg')
+#     expert = pygame.transform.scale(begginer,
+#                                     (QUESTION_WIDTH, QUESTION_HEIGHT))
+#     master = pygame.image.load('images/master.jpg')
+#     master = pygame.transform.scale(begginer,
+#                                     (QUESTION_WIDTH, QUESTION_HEIGHT))

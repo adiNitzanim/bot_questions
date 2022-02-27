@@ -22,7 +22,7 @@ def main():
                                                 '/background_without_chat.png')
     background_without_chat = pygame.transform.scale(
         background_without_chat, (WINDOW_WIDTH, WINDOW_HEIGHT))
-    questions_array = analyze_data()
+    questions_array, num_of_question = analyze_data()
     current_question_number = 0
     current_question = questions_array[current_question_number]
     start_over_button = Button(START_OVER_X, START_OVER_Y, START_OVER_WIDTH,
@@ -39,7 +39,7 @@ def main():
             if event.type == pygame.QUIT:
                 running = False
             if done_guess:
-                if current_question_number + 1 < len(questions_array):
+                if current_question_number + 1 < num_of_question:
                     current_question_number += 1
                     prev_question = current_question
                     current_question = questions_array[current_question_number]

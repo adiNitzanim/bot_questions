@@ -13,4 +13,4 @@ def analyze_data():
         questions_array.append(
             Question(question_number, question_text, answers, correct_answer))
     file.close()
-    return questions_array
+    return questions_array, len(questions_array)

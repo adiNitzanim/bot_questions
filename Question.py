@@ -12,8 +12,8 @@ from helpers import from_text_to_array, screen, center_text, \
 class Question:
 
     def __init__(self, num_of_question, question_text, answers, correct_answer):
-        self.text_array = from_text_to_array(question_text, QUESTION_WIDTH,
-                                             QUESTION_FONT_SIZE)
+        self.question_text_array = from_text_to_array(question_text, QUESTION_WIDTH,
+                                                      QUESTION_FONT_SIZE)
         self.answers = answers
         for i in range(0, len(self.answers)):
             answers[i] = from_text_to_array(answers[i], ANSWER_BOX_WIDTH,
@@ -29,17 +29,17 @@ class Question:
         self.display_user_answer()
 
     def display_question(self):
-        text_rect = get_text_rect(QUESTION_FONT_SIZE, self.text_array[0], BLACK)
+        text_rect = get_text_rect(QUESTION_FONT_SIZE, self.question_text_array[0], BLACK)
         text_height = text_rect.height
         pygame.draw.rect(screen, (255, 255, 255),
                          pygame.Rect(QUESTION_X,
                                      self.question_y_pos,
                                      QUESTION_WIDTH,
                                      self.question_height() + 10))
-        for i in range(0, len(self.text_array)):
+        for i in range(0, len(self.question_text_array)):
             text_font = pygame.font.SysFont('chalkduster.ttf',
                                             QUESTION_FONT_SIZE, bold=False)
-            text_to_display = text_font.render(self.text_array[i],
+            text_to_display = text_font.render(self.question_text_array[i],
                                                True, (0, 0, 0))
             screen.blit(text_to_display, (
                 QUESTION_X + 5, self.question_y_pos + 5 + (text_height * i)))
@@ -136,7 +136,7 @@ class Question:
         return next_question_y_pos
 
     def question_height(self):
-        return calculate_sentence_height() * len(self.text_array)
+        return calculate_sentence_height() * len(self.question_text_array)
 
     def calculate_answer_box_height(self):
         max_height = 0
