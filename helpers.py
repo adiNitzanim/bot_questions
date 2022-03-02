@@ -7,7 +7,7 @@ from constants import WINDOW_WIDTH, WINDOW_HEIGHT, QUESTION_FONT_SIZE, \
     RESULTS_Y, RESULTS_TEXT_COLOR, START_OVER_BUTTON_COLOR, START_OVER_X, \
     START_OVER_Y, START_OVER_WIDTH, START_OVER_HEIGHT, START_OVER_TEXT_SIZE, \
     START_OVER_TEXT_COLOR, QUESTION_WIDTH, QUESTION_X, CHAT_BOX_WIDTH, \
-    QUESTION_HEIGHT
+    QUESTION_HEIGHT, BOX_MARGIN, GAP_Y, END_OF_CHAT_Y
 
 screen = pygame.display.set_mode((WINDOW_WIDTH, WINDOW_HEIGHT))
 
@@ -108,13 +108,18 @@ def calculate_sentence_height():
     return text_rect.height
 
 
+def calculate_pixels_to_rollup(prev_question, current_question):
+    return -1 * (END_OF_CHAT_Y - (
+            next_question_y_pos(
+                prev_question) + calculate_question_answers_height
+            (current_question)))
+
+
 def roll_up(num_of_pixels, displayed_questions):
     for display_question in displayed_questions:
         display_question.set_y_pos(
             display_question.question_y_pos - num_of_pixels)
         display_question.display()
-
-    print("finish roll up")
 
 
 def get_text_rect(font_size, text, text_color):
@@ -124,6 +129,42 @@ def get_text_rect(font_size, text, text_color):
         text,
         True, text_color)
     return text_to_display.get_rect()
+
+
+def next_question_y_pos(question):
+    if not question.get_guess_user_answer() == -1:
+        next_question_y_pos = question.get_y_pos() + \
+                              calculate_question_box_height(question) + \
+                              GAP_Y + (
+                                  calculate_answers_box_height(question)) \
+                              + GAP_Y + (
+                                  calculate_user_guessed_answer_height(
+                                      question))
+    else:
+        next_question_y_pos = question.get_y_pos() + calculate_question_box_height(
+            question) + \
+                              GAP_Y + calculate_answers_box_height(question)
+    return next_question_y_pos
+
+
+def calculate_question_answers_height(question):
+    return calculate_question_box_height(
+        question) + calculate_answers_box_height(question) + (
+                   2 * GAP_Y)
+
+
+def calculate_question_box_height(question):
+    return (calculate_sentence_height() * len(
+        question.get_question_text_array())) + BOX_MARGIN
+
+
+def calculate_answers_box_height(question):
+    return 2 * question.calculate_answer_box_height()
+
+
+def calculate_user_guessed_answer_height(question):
+    return calculate_sentence_height() * len(
+        question.get_answers()[question.get_guess_user_answer()])
 
 # def load_result_pic():
 #     begginer = pygame.image.load('images/begginer 1.jpg')

@@ -6,7 +6,9 @@ from constants import WINDOW_WIDTH, WINDOW_HEIGHT,\
     START_OVER_X, START_OVER_Y, START_OVER_WIDTH, START_OVER_HEIGHT, \
     NUM_OF_ANSWERS, END_OF_CHAT_Y
 from database_functions import analyze_data
-from helpers import screen, mouse_in_button, display_results, roll_up
+from helpers import screen, mouse_in_button, display_results, roll_up, \
+    next_question_y_pos, calculate_question_answers_height, \
+    calculate_pixels_to_rollup
 
 
 def main():
@@ -43,11 +45,10 @@ def main():
                     current_question_number += 1
                     prev_question = current_question
                     current_question = questions_array[current_question_number]
-                    if prev_question.end_total_question_y_pos() + current_question.total_height_question_answers() > END_OF_CHAT_Y:
-                        pixel_to_roll_up = -1 *(END_OF_CHAT_Y - (
-                                prev_question.end_total_question_y_pos() + current_question.total_height_question_answers()))
+                    if next_question_y_pos(prev_question) + calculate_question_answers_height(current_question) > END_OF_CHAT_Y:
+                        pixel_to_roll_up = calculate_pixels_to_rollup(prev_question, current_question)
                         roll_up(pixel_to_roll_up, displayed_questions)
-                    current_question.set_y_pos(prev_question.end_total_question_y_pos())
+                    current_question.set_y_pos(next_question_y_pos(prev_question))
                     displayed_questions.append(current_question)
                     done_guess = False
                 else:

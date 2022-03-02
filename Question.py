@@ -4,7 +4,7 @@ from Button import Button
 from constants import QUESTION_X, \
     QUESTION_Y, QUESTION_FONT_SIZE, ANSWER_BOX_WIDTH, ANSWER_BOX_HEIGHT, \
     ANSWER_BOX_X, GAP_X, GAP_Y, QUESTION_WIDTH, \
-    ANSWER_FONT_SIZE, USER_ANSWER_X, ANSWER_COLOR, BLACK
+    ANSWER_FONT_SIZE, USER_ANSWER_X, ANSWER_COLOR, BLACK, BOX_MARGIN
 from helpers import from_text_to_array, screen, center_text, \
     calculate_sentence_height, get_text_rect
 
@@ -12,7 +12,8 @@ from helpers import from_text_to_array, screen, center_text, \
 class Question:
 
     def __init__(self, num_of_question, question_text, answers, correct_answer):
-        self.question_text_array = from_text_to_array(question_text, QUESTION_WIDTH,
+        self.question_text_array = from_text_to_array(question_text,
+                                                      QUESTION_WIDTH,
                                                       QUESTION_FONT_SIZE)
         self.answers = answers
         for i in range(0, len(self.answers)):
@@ -29,13 +30,14 @@ class Question:
         self.display_user_answer()
 
     def display_question(self):
-        text_rect = get_text_rect(QUESTION_FONT_SIZE, self.question_text_array[0], BLACK)
+        text_rect = get_text_rect(QUESTION_FONT_SIZE,
+                                  self.question_text_array[0], BLACK)
         text_height = text_rect.height
         pygame.draw.rect(screen, (255, 255, 255),
                          pygame.Rect(QUESTION_X,
                                      self.question_y_pos,
                                      QUESTION_WIDTH,
-                                     self.question_height() + 10))
+                                     self.question_height() + BOX_MARGIN))
         for i in range(0, len(self.question_text_array)):
             text_font = pygame.font.SysFont('chalkduster.ttf',
                                             QUESTION_FONT_SIZE, bold=False)
@@ -100,7 +102,9 @@ class Question:
                 Button(ANSWER_BOX_X + ((i % 2) * (
                         ANSWER_BOX_WIDTH + GAP_X)),
                        self.question_y_pos + self.question_height() + GAP_Y + (
-                               (i // 2) * (self.calculate_answer_box_height() + (GAP_Y // 2))),
+                               (i // 2) * (
+                               self.calculate_answer_box_height() + (
+                               GAP_Y // 2))),
                        ANSWER_BOX_WIDTH,
                        self.calculate_answer_box_height()))
         return answers_buttons
@@ -119,30 +123,29 @@ class Question:
     def set_y_pos(self, y_pos):
         self.question_y_pos = y_pos
 
+    def get_y_pos(self):
+        return self.question_y_pos
+
     def answers_y_pos(self):
         return self.question_y_pos + self.question_height() + (
                 1.5 * GAP_Y) + 2 * self.calculate_answer_box_height()
 
-    def total_height_question_answers(self):
-        return self.end_total_question_y_pos() - self.question_y_pos
-
-    def end_total_question_y_pos(self):
-        if not self.guess_answer_number == -1:
-            next_question_y_pos = self.answers_y_pos() + GAP_Y + (
-                    calculate_sentence_height() * len(
-                self.answers[self.guess_answer_number]))
-        else:
-            next_question_y_pos = self.answers_y_pos() + GAP_Y + self.calculate_answer_box_height()
-        return next_question_y_pos
+    def get_guess_user_answer(self):
+        return self.guess_answer_number
 
     def question_height(self):
         return calculate_sentence_height() * len(self.question_text_array)
 
+    def get_question_text_array(self):
+        return self.question_text_array
+
     def calculate_answer_box_height(self):
         max_height = 0
         for i in range(0, len(self.answers)):
-            height = calculate_sentence_height()*len(self.answers[i])
+            height = calculate_sentence_height() * len(self.answers[i])
             if height > max_height:
                 max_height = height
         return max_height + 5
 
+    def get_answers(self):
+        return self.answers
